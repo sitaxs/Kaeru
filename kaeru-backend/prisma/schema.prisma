@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String   
+  name      String?
+  role      String   @default("USER") // ADMIN або USER
+
+  events    Event[]  @relation("OrganizedEvents")
+  followers Follow[] @relation("UserFollowers")
+  following Follow[] @relation("UserFollowing")
+  registrations Registration[]
+  bookmarks     Bookmark[]
+}
+
+model Event {
+  id              String   @id @default(uuid())
+  title           String
+  description     String?
+  date            String
+  location        String
+  
+  price           Float?
+  paymentType     String   // "free", "paid", "donation"
+  
+  // ОСЬ ТУТ ЗМІНА: Тепер категорія береться з окремої таблиці
+  categoryId      String
+  category        Category @relation(fields: [categoryId], references: [id])
+  
+  imageUrl        String
+  bannerUrl       String?
+  
+  tags            String[] // Масив тегів
+  add_tags        String[] // Додаткові теги
+
+  status          String   @default("active") // "active", "pending", "inactive"
+
+  startsAt        String?
+  endsAt          String?
+  locationDetail  String?
+
+  speaker         Json?    // { name, role, avatarUrl, about }
+  seo             Json?    // { title, description, ogImage }
+
+  // Зв'язок з організатором
+  organizerId     String
+  organizer       User     @relation("OrganizedEvents", fields: [organizerId], references: [id])
+  
+  // ЗВ'ЯЗКИ З НОВИМИ ТАБЛИЦЯМИ
+  reviews         Review[]
+  registrations   Registration[] // Ті, хто купив квиток / зареєструвався
+  bookmarks       Bookmark[]     // Ті, хто додав у збережене
+}
+
+model Category {
+  id     String  @id @default(uuid())
+  name   String  @unique // Наприклад: "IT", "Design"
+  events Event[]
+}
+
+model Registration {
+  id      String @id @default(uuid())
+  userId  String
+  eventId String
+  user    User   @relation(fields: [userId], references: [id])
+  event   Event  @relation(fields: [eventId], references: [id])
+  @@unique([userId, eventId])
+}
+
+model Bookmark {
+  userId  String
+  eventId String
+  user    User   @relation(fields: [userId], references: [id])
+  event   Event  @relation(fields: [eventId], references: [id])
+  @@id([userId, eventId])
+}
+
+model Follow {
+  followerId  String
+  followingId String
+  follower    User   @relation("UserFollowing", fields: [followerId], references: [id])
+  following   User   @relation("UserFollowers", fields: [followingId], references: [id])
+  @@id([followerId, followingId])
+}
+
+model Review {
+  id      String @id @default(uuid())
+  rating  Int
+  text    String?
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
