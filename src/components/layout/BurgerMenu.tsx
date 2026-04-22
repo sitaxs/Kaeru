@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import LocationSelector from "../ui/LocationSelector"; // ОНОВЛЕНО: Імпортуємо локацію
-import HaedLogo from "../ui/HeadLogo";
+import LocationSelector from "../ui/LocationSelector"; 
 import HeadLogo from "../ui/HeadLogo";
+// Імпортуємо твої кастомні іконки з папки Icon
+import RemindersIcon from "../Icon/RemindersIcon";
+import FavoritesIcon from "../Icon/FavoritesIcon";
 
 interface BurgerMenuProps {
     isOpen: boolean;
@@ -49,7 +50,6 @@ export default function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
 
     const menuContent = (
         <div className="fixed inset-0 z-[9999] flex justify-end overflow-hidden">
-            {/* ОНОВЛЕНО: Затемнення сильніше (bg-black/60) і без розмиття */}
             <div 
                 className={`absolute inset-0 bg-black/60 transition-opacity duration-500 ease-in-out ${
                     isAnimating ? "opacity-100" : "opacity-0"
@@ -72,23 +72,28 @@ export default function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
 
                 <div className="flex-1 overflow-y-auto py-6 px-4 flex flex-col gap-2 scrollbar-hide">
                     
-                   <div className="flex items-center gap-4 px-4 mb-4">
-                        {/* Оранжеве коло-фон. overflow-hidden обрізає все, що вилазить за краї */}
+                    {/* МІЙ АКАУНТ (Тепер це велика клікабельна кнопка) */}
+                    <button onClick={() => handleNavigation('/profile')} className="flex items-center gap-4 px-4 mb-4 text-left w-full hover:opacity-80 transition-opacity">
                         <div className="w-14 h-14 bg-orange text-white rounded-full flex items-center justify-center shadow-sm shrink-0 overflow-hidden">
-                            {/* Цей div контролює розмір жабки. 
-                                80% робить її меншою, залишаючи оранжевий фон. 
-                                mt-2 (margin-top) трохи опускає її вниз, щоб вона гарно сиділа */}
                             <div className="w-[80%] h-[80%] flex items-center justify-center mt-2">
                                 <HeadLogo/>
                             </div>
                         </div>
                         <div>
                             <h3 className="font-bold text-m-t text-lg leading-tight">Мій Акаунт</h3>
-                            <button onClick={() => handleNavigation('/profile')} className="text-sm text-gray-d hover:text-orange transition-colors font-medium">Перейти в профіль</button>
+                            <span className="text-sm text-gray-d font-medium">Перейти в профіль</span>
                         </div>
+                    </button>
+
+                    {/* ВЕЛИКА КНОПКА "СТВОРИТИ ІВЕНТ" */}
+                    <div className="px-2 mb-4">
+                        <button onClick={() => handleNavigation('/create')} className="w-full py-3.5 bg-orange text-white rounded-2xl font-bold text-lg hover:opacity-90 transition-opacity flex justify-center items-center gap-2 shadow-sm">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            Створити івент
+                        </button>
                     </div>
 
-                    {/* ОНОВЛЕНО: Компонент локації (видимий тільки на телефонах і планшетах) */}
+                    {/* ЛОКАЦІЯ */}
                     <div className="lg:hidden px-2 mb-4">
                         <div className="bg-gray-50 rounded-2xl p-2">
                             <LocationSelector />
@@ -96,16 +101,34 @@ export default function BurgerMenu({ isOpen, onClose }: BurgerMenuProps) {
                     </div>
 
                     <div className="flex flex-col gap-1">
+                        {/* НОВА ВКАЛДКА: МОЇ КВИТКИ */}
+                        <button onClick={() => handleNavigation('/profile?tab=tickets')} className="flex items-center gap-4 p-4 rounded-2xl hover:bg-gray-100 transition-colors text-m-t font-bold text-lg text-left group">
+                            <span className="w-8 flex justify-center text-gray-d group-hover:text-orange transition-colors">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"></path><path d="M13 5v2"></path><path d="M13 17v2"></path><path d="M13 11v2"></path></svg>
+                            </span>
+                            Мої квитки
+                        </button>
+
                         <button onClick={() => handleNavigation('/reminders')} className="flex items-center gap-4 p-4 rounded-2xl hover:bg-gray-100 transition-colors text-m-t font-bold text-lg text-left group">
-                            <span className="w-8 flex justify-center text-gray-d group-hover:text-orange transition-colors"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></span>
+                            <span className="w-8 flex justify-center text-gray-d group-hover:text-orange transition-colors">
+                                {/* Замінили на твій дзвіночок */}
+                                <RemindersIcon className="w-6 h-6" />
+                            </span>
                             Сповіщення
                         </button>
+                        
                         <button onClick={() => handleNavigation('/favorites')} className="flex items-center gap-4 p-4 rounded-2xl hover:bg-gray-100 transition-colors text-m-t font-bold text-lg text-left group">
-                            <span className="w-8 flex justify-center text-gray-d group-hover:text-red-500 transition-colors"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></span>
+                            <span className="w-8 flex justify-center text-gray-d group-hover:text-orange transition-colors">
+                                {/* Замінили на твою лапку */}
+                                <FavoritesIcon className="w-[26px] h-[26px]" />
+                            </span>
                             Вподобайки
                         </button>
+                        
                         <button onClick={() => handleNavigation('/dashboard')} className="flex items-center gap-4 p-4 rounded-2xl hover:bg-grean-l/10 transition-colors text-m-t font-bold text-lg text-left group">
-                            <span className="w-8 flex justify-center text-grean-l"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" y1="8" x2="19" y2="14"></line><line x1="22" y1="11" x2="16" y2="11"></line></svg></span>
+                            <span className="w-8 flex justify-center text-grean-l">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" y1="8" x2="19" y2="14"></line><line x1="22" y1="11" x2="16" y2="11"></line></svg>
+                            </span>
                             Для організатора
                         </button>
                     </div>

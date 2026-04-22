@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Event } from "../../types/types";
 import Image from "next/image";
-import { LikeButton } from './LikeButton';
+import { LikeButton } from '../Icon/LikeButton';
 import { cn } from '../../lib/utils';
 
 // Використовуємо props, щоб передати весь об'єкт івенту в кнопку

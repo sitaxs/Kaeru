@@ -2,7 +2,7 @@ import { eventApi } from "@/lib/api";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
-import { LikeButton } from "@/components/ui/LikeButton";
+import { LikeButton } from "@/components/Icon/LikeButton";
 import ShareButton from "@/components/ui/ShareButton";
 import ExpandableText from "@/components/ui/ExpandableText";
 import EventReviews from "@/components/ui/EventReviews";

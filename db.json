@@ -617,6 +617,70 @@
       "originalEventId": "hackathon-ai-projects",
       "userId": "TtTO0D2sm6A",
       "id": "emCevt6IVPM"
+    },
+    {
+      "title": "Дизайн-конференція: Майбутнє UI/UX",
+      "date": "10 Березня, 10:00",
+      "location": "КВЦ Парковий, Київ",
+      "tags": [
+        "Дизайн",
+        "Networking"
+      ],
+      "price": 500,
+      "paymentType": "paid",
+      "category": "Design",
+      "status": "active",
+      "imageUrl": "https://images.unsplash.com/photo-1558442074-3c19857bc1dc?w=800&q=80",
+      "bannerUrl": "https://images.unsplash.com/photo-1558442074-3c19857bc1dc?w=1600&q=80",
+      "startsAt": "10:00",
+      "endsAt": "18:00",
+      "locationDetail": "КВЦ Парковий, Паркова дорога, 16a, Київ",
+      "description": "День про сучасні підходи до UI/UX: тренди в інтерфейсах, як приймати дизайн-рішення, що вимірювати та як будувати дизайн-системи. Будуть розібрані реальні кейси українських та світових продуктів. Після доповідей на вас чекає нетворкінг-вечірка на терасі.",
+      "seo": {
+        "title": "Дизайн-конференція: Майбутнє UI/UX | КВЦ Парковий",
+        "description": "Найбільша UI/UX конференція весни у Києві. Тренди, кейси та нетворкінг для дизайнерів усіх рівнів.",
+        "ogImage": "https://images.unsplash.com/photo-1558442074-3c19857bc1dc?w=1200&q=80"
+      },
+      "speaker": {
+        "name": "Антон Савченко",
+        "role": "Chief Design Officer",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=256&q=80",
+        "about": "Більше 10 років у дизайні. Створював інтерфейси для фінтех-продуктів з мільйонною аудиторією."
+      },
+      "reviews": [
+        {
+          "id": "rev_ux_1",
+          "authorName": "Катерина",
+          "authorInitial": "К",
+          "date": "2 тижні тому",
+          "rating": 5,
+          "text": "Дуже надихаюче! Особливо сподобалась лекція про дизайн-системи.",
+          "mediaUrl": "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=200&q=80"
+        },
+        {
+          "id": "rev_ux_2",
+          "authorName": "Віталій",
+          "authorInitial": "В",
+          "date": "Місяць тому",
+          "rating": 3,
+          "text": "Доповіді непогані, але кава-брейк був погано організований, великі черги.",
+          "adminReply": {
+            "author": "Організатор UI/UX",
+            "text": "Віталію, дякуємо за фідбек! Ми вже змінили підрядника з кейтерингу для наступних подій.",
+            "date": "3 тижні тому"
+          }
+        },
+        {
+          "id": "rev_ux_3",
+          "authorName": "Анонім",
+          "authorInitial": "А",
+          "date": "Місяць тому",
+          "rating": 5
+        }
+      ],
+      "originalEventId": "design-conference-ux",
+      "userId": "TtTO0D2sm6A",
+      "id": "tmEbRuCvnnM"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

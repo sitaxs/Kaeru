@@ -3,51 +3,35 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import GoogleLoginButton from "@/components/ui/GoogleLoginButton";
+import { authApi } from "@/lib/api"; // Імпортуємо наш API
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
     try {
-      // 1. ЗМІНИЛИ НА НАШ НОВИЙ БЕКЕНД І POST-ЗАПИТ
-      const res = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      // 2. ЯКЩО БЕКЕНД ВІДПОВІВ УСПІШНО (пароль підійшов)
-      if (res.ok) {
-        const user = await res.json(); // Отримуємо об'єкт {id, email, name, role}
-
-        // Зберігаємо дані в пам'ять браузера
-        localStorage.setItem("userId", user.id); // Щоб працювало створення івентів
-        localStorage.setItem("kaeru_user", JSON.stringify(user)); // Для твого дизайну
-
-        router.push("/");
-        router.refresh();
-      } else {
-        // Якщо помилка (наприклад, невірний пароль) - дістаємо текст помилки з бекенду
-        const errorData = await res.json();
-        setError(errorData.error || "Невірний email або пароль.");
-      }
-    } catch (err) {
-      setError("Помилка з'єднання з сервером.");
+      // Використовуємо наш налаштований API на 3001 порту
+      const user = await authApi.login(email, password);
+      
+      localStorage.setItem("userId", user.id);
+      localStorage.setItem("kaeru_user", JSON.stringify(user));
+      router.push("/");
+      router.refresh();
+    } catch (err: any) {
+      setError(err.message || "Помилка з'єднання з сервером.");
     }
   };
 
   return (
     <div className="flex flex-col items-center justify-center w-full min-h-[100dvh] max-w-md mx-auto px-4 py-12">
       
-      {/* КНОПКА НАЗАД */}
       <Link href="/" className="fixed top-6 left-6 md:top-10 md:left-10 w-12 h-12 flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-m-t rounded-full transition-colors z-50 shadow-sm">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
       </Link>
@@ -77,9 +61,33 @@ export default function LoginPage() {
         </div>
 
         <form onSubmit={handleLogin} className="flex flex-col gap-4">
-          {error && <p className="text-red-500 text-sm text-center font-medium">{error}</p>}
           <input type="email" placeholder="Email адреса" value={email} onChange={e => setEmail(e.target.value)} className="w-full h-14 px-5 bg-transparent border border-gray-l rounded-2xl outline-none focus:border-orange text-m-t" required />
-          <input type="password" placeholder="Пароль" value={password} onChange={e => setPassword(e.target.value)} className="w-full h-14 px-5 bg-transparent border border-gray-l rounded-2xl outline-none focus:border-orange text-m-t" required />
+          
+          <div className="relative w-full">
+            <input 
+              type={showPassword ? "text" : "password"} 
+              placeholder="Пароль" 
+              value={password} 
+              onChange={e => setPassword(e.target.value)} 
+              className="w-full h-14 px-5 pr-12 bg-transparent border border-gray-l rounded-2xl outline-none focus:border-orange text-m-t" 
+              required 
+            />
+            <button 
+              type="button" 
+              onClick={() => setShowPassword(!showPassword)} 
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-orange transition-colors"
+            >
+              {showPassword ? (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+              ) : (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              )}
+            </button>
+          </div>
+
+          {/* ПОМИЛКА ТЕПЕР ТУТ - ПІД ПАРОЛЕМ */}
+          {error && <p className="text-red-500 text-sm text-center font-medium mt-1">{error}</p>}
+
           <button type="submit" className="w-full h-14 mt-2 bg-orange text-white font-bold rounded-2xl hover:opacity-90 transition-opacity text-lg">Увійти</button>
         </form>
       </div>
